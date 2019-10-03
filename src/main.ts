@@ -1,3 +1,7 @@
+import {Server} from './Server'
+
 console.log('asdf')
 
-console.log('asdfasfasf')
+const server = new Server();
+
+server.start()
