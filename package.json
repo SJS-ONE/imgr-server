@@ -1,11 +1,12 @@
 {
   "name": "imgr-server",
   "version": "0.0.2",
-  "description": "",
-  "main": "main.js",
+  "description": "This project has been created using **webpack scaffold**, you can now run",
+  "main": "out/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node out/main.js"
+    "serve": "node out/main.js",
+    "build" : "tsc"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +19,13 @@
   },
   "dependencies": {
     "imgr-library": "file:../imgr-library"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SJS-ONE/imgr-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SJS-ONE/imgr-server/issues"
+  },
+  "homepage": "https://github.com/SJS-ONE/imgr-server#readme"
 }
