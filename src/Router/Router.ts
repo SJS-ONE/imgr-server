@@ -44,9 +44,16 @@ export class Router extends AbstractRouter{
                     part = routeIndex
                     break;
                 }
+                if(routeIndex === '*'){
+                    urlData[routeIndex] = [part, ...parts].join('/')
+                    part = routeIndex
+                    break;
+                }
             }
         }
-        if(parts.length > 0){
+        if(part === '*'){
+            return {handler: routes[part].handler, data: urlData}
+        } else if(parts.length > 0){
             return this.getRecurseRouteHandler(parts, routes[part].routes, urlData)
         }else if(routes[part] && routes[part].handler){
             return {handler: routes[part].handler, data: urlData}
@@ -63,8 +70,6 @@ export class Router extends AbstractRouter{
         const parts = route.split('/').filter(Boolean)
         const path = this.createRecurseRoutePaths(parts)
         path.handler = handler
-        console.log(route)
-
     }
     
     public handle(req:NodeHttp.IncomingMessage, res:NodeHttp.ServerResponse):void{

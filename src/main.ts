@@ -40,10 +40,10 @@ router.addRoute('/source/{sourceName}/images', (data)=>{
     data.response.write(JSON.stringify(images));
 });
 
-router.addRoute('/source/{sourceName}/path/{path}', (data)=>{
+router.addRoute('/source/{sourceName}/path/*', (data)=>{
     const source = library.getSourceByName(data.parameter.sourceName);
-    console.log(data.parameter.path)
-    const images = source.getImages();
+    const path = data.parameter['*'];
+    const images = source.getImagesByPath(path);
     data.response.write(JSON.stringify(images));
 });
 
@@ -85,8 +85,10 @@ router.addRoute('/jobs/{jobIdentifier}', (data) => {
 server.setRouter(router);
 
 (async ()=>{
-    await library.scanSource('lego')
-    await library.scanSource('olympia')
+    //await library.scanSource('lego')
+    //await library.scanSource('olympia')
+
+    await library.loadDatabase();
     
     server.start()
 })();
