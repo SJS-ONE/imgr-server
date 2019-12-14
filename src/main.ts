@@ -9,7 +9,9 @@ const router = new Router();
 
 import * as imgr from 'imgr-library';
 
-const config:imgr.Config = JSON.parse(NodeFs.readFileSync("out/config.json"));
+const cliArgs = process.argv.slice(2);
+
+const config:imgr.Config = JSON.parse(NodeFs.readFileSync(cliArgs[0]));
 
 const library = new imgr.Library(config);
 
