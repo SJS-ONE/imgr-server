@@ -6,14 +6,19 @@ interface RoutePath{
     routes: RoutePath | {}
 }
 
+interface HandlerData{
+    parameter: any,
+    request: NodeHttp.IncomingMessage,
+    response: NodeHttp.ServerResponse
+}
+
 export class Router extends AbstractRouter{
 
-    protected serverRoutes = {}
-
-    protected defaultHandler = (req:NodeHttp.IncomingMessage, res:NodeHttp.ServerResponse)=>{ res.statusCode = 404; res.end('err')}
+    protected serverRoutes:{ [key: string]: any; } = {}
+    protected defaultHandler = (data:HandlerData)=>{ data.response.statusCode = 404; data.response.end('')}
     
     public createRecurseRoutePaths(parts: Array<string>, routes:any = this.serverRoutes): RoutePath{
-        const part = parts.splice(0, 1)[0]
+        const part = parts.length > 0 ? parts.splice(0, 1)[0] : '/'
         if(!routes[part]){
             const routePath:RoutePath= {handler: undefined, routes:{}};
             routes[part] = routePath;
@@ -25,9 +30,10 @@ export class Router extends AbstractRouter{
     }
     
     public getRecurseRouteHandler(parts:Array<string>, routes = this.serverRoutes, data = undefined){
-        let part = parts.splice(0, 1)[0]
+        const DefaultReturn = {handler: this.defaultHandler, data: data};
+        let part = parts.length > 0 ? parts.splice(0, 1)[0] : '/'
         if(!part){
-            return {handler: undefined, data: data};
+            return DefaultReturn;
         }
         const urlData = data || {};
         if(!routes[part]){
@@ -36,31 +42,40 @@ export class Router extends AbstractRouter{
                     let key = routeIndex.replace('{','').replace('}','')
                     urlData[key] = part
                     part = routeIndex
+                    break;
                 }
             }
         }
         if(parts.length > 0){
             return this.getRecurseRouteHandler(parts, routes[part].routes, urlData)
-        }else{
+        }else if(routes[part] && routes[part].handler){
             return {handler: routes[part].handler, data: urlData}
+        }else{
+            return DefaultReturn;
         }
     }
+
+    public setDefaultHandler(handler:(data:HandlerData)=>any){
+        this.defaultHandler = handler;
+    }
     
-    public addRoute(route, handler){
+    public addRoute(route:string, handler:(data:HandlerData)=>any){
         const parts = route.split('/').filter(Boolean)
         const path = this.createRecurseRoutePaths(parts)
         path.handler = handler
+        console.log(route)
+
     }
     
-    public handle(url:string){
-        const parts = url.split('/').filter(Boolean)
-        let {handler, data} = this.getRecurseRouteHandler(parts)
-    
-        if(handler){
-            handler(data)
-        }else{
-            this.defaultHandler(data)
+    public handle(req:NodeHttp.IncomingMessage, res:NodeHttp.ServerResponse):void{
+        const parts = req.url!.split('/').filter(Boolean)
+        const {handler, data} = this.getRecurseRouteHandler(parts)
+        const handlerData = {
+            parameter: data,
+            request: req,
+            response: res
         }
+        handler(handlerData);
     }
 }
 

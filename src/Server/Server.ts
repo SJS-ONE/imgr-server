@@ -1,5 +1,5 @@
 import * as NodeHttp from 'http'
-import AbstractRouter from './AbstractRouter';
+import AbstractRouter from '../Router/AbstractRouter';
 
 
 export class Server{
@@ -12,7 +12,8 @@ export class Server{
     }
 
     protected requestHandler(req:NodeHttp.IncomingMessage, res:NodeHttp.ServerResponse){
-        this.router!.handle(req.url)
+        res.setHeader( "Access-Control-Allow-Origin", "*");
+        this.router!.handle(req, res);
         res.end("");
     }
 

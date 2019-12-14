@@ -4,11 +4,19 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node out/main.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^12.7.9"
+    "@types/node": "^12.7.9",
+    "native-ext-loader": "^2.3.0",
+    "node-loader": "^0.6.0",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "imgr-library": "file:../imgr-library"
   }
 }
