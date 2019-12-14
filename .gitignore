@@ -1,2 +1,4 @@
 node_modules
 app/*
+out/*
+.DS_Store
