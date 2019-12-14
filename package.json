@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node out/main.js",
     "build": "tsc",
-    "postinstall": "tsc"
+    "postinstall": "tsc || true"
   },
   "author": "",
   "license": "ISC",
