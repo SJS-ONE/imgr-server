@@ -20,7 +20,7 @@ export class Router extends AbstractRouter{
     public createRecurseRoutePaths(parts: Array<string>, routes:any = this.serverRoutes): RoutePath{
         const part = parts.length > 0 ? parts.splice(0, 1)[0] : '/'
         if(!routes[part]){
-            const routePath:RoutePath= {handler: undefined, routes:{}};
+            const routePath:RoutePath = {handler: undefined, routes:{}};
             routes[part] = routePath;
         }
         if(parts.length > 0){

@@ -19,7 +19,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "imgr-library": "git+https://github.com/SJS-ONE/imgr-library.git"
+    "imgr-library": "file:../imgr-library"
   },
   "repository": {
     "type": "git",

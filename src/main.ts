@@ -17,7 +17,6 @@ const library = new imgr.Library(config);
 
 const jobController = new JobController(); 
 
-
 router.addRoute('/', (data) => {
     data.response.write("test /");
     data.response.end();
@@ -37,20 +36,40 @@ router.addRoute('/sources', (data)=>{
 });
 
 router.addRoute('/source/{sourceName}/images', (data)=>{
-    const source = library.getSourceByName(data.parameter.sourceName);
-    const images = source.getImages();
+    const sourceName = data.parameter.sourceName;
+    const source = library.getSourceByName(sourceName);
+    const images = source.getImages().map((image: imgr.Image) => {
+        return {
+            exifData: image.exifData,
+            metadata: image.metadata,
+            path: image.path,
+            uuid: image.uuid,
+            sourceName: sourceName
+        }
+    });
     data.response.write(JSON.stringify(images));
 });
 
 router.addRoute('/source/{sourceName}/path/*', (data)=>{
-    const source = library.getSourceByName(data.parameter.sourceName);
+    const sourceName = data.parameter.sourceName;
+    const source = library.getSourceByName(sourceName);
     const path = data.parameter['*'];
-    const images = source.getImagesByPath(path);
+    const images = source.getImagesByPath(path).map((image: imgr.Image) => {
+        return {
+            exifData: image.exifData,
+            metadata: image.metadata,
+            path: image.path,
+            uuid: image.uuid,
+            sourceName: sourceName
+        }
+    });
+    
     data.response.write(JSON.stringify(images));
 });
 
 router.addRoute('/source/{sourceName}/image/{uuid}', (data)=>{
-    const source = library.getSourceByName(data.parameter.sourceName);
+    const sourceName = data.parameter.sourceName;
+    const source = library.getSourceByName(sourceName);
     const image = source.getImage(data.parameter.uuid)
     const res = image === undefined ? {error:'image not found'} : image;
     data.response.write(JSON.stringify(res));
@@ -87,10 +106,10 @@ router.addRoute('/jobs/{jobIdentifier}', (data) => {
 server.setRouter(router);
 
 (async ()=>{
-    //await library.scanSource('lego')
-    //await library.scanSource('olympia')
+    await library.scanSource('lego')
+    await library.scanSource('olympia')
 
-    await library.loadDatabase();
+    //await library.loadDatabase();
     
     server.start()
 })();

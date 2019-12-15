@@ -13,7 +13,12 @@ export class Server{
 
     protected requestHandler(req:NodeHttp.IncomingMessage, res:NodeHttp.ServerResponse){
         res.setHeader( "Access-Control-Allow-Origin", "*");
-        this.router!.handle(req, res);
+        try{
+            this.router!.handle(req, res);
+        }catch(e){
+            res.write(JSON.stringify({error: "internal server error"}))
+        }
+        
         res.end("");
     }
 
