@@ -106,8 +106,7 @@ router.addRoute('/jobs/{jobIdentifier}', (data) => {
 server.setRouter(router);
 
 (async ()=>{
-    await library.scanSource('lego')
-    await library.scanSource('olympia')
+    library.scanSources()
 
     //await library.loadDatabase();
     
